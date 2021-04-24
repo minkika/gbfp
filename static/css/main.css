@@ -1,11 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: rgb(247, 249, 251);
+}
+
+a {
+    color: #1e88e5;
+}
+
+label {
+    margin-bottom: 6px;
+}
+
 #logo {
-    background-color: red;
+    /*background-color: red;*/
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
 }
 
-#logo > span {
-    line-height: 2.5;
+#logo > img {
+    /*line-height: 2.5;*/
+    border-radius: 50%;
 }
 
+/*#main, #header > .navbar > * {*/
+/*    margin: 0 auto;*/
+/*    width: 1280px;*/
+/*}*/
+
+#header > .navbar {
+    height: 80px;
+}
+
+.btn-primary {
+    background-color: #64b5f6;
+    border: unset;
+}
+
+.btn-primary:hover {
+    background-color: #569bd0;
+}
+
+.btn-outline-primary {
+    color: #64b5f6;
+    border-color: #64b5f6;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #64b5f6;
+    border-color: #64b5f6;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #569bd0;
+}
+
+.card {
+    border: unset;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.shadow-sm {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .045) !important;
+}
+
+.rounded {
+    border-radius: 15px !important;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    --bs-table-accent-bg: #fff !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n) {
+    --bs-table-accent-bg: #f6f9fb !important;
+}
+
+.paginator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.paginator a:first-child {
+    margin-right: 10px;
+}
+
+.paginator a:last-child {
+    margin-left: 10px;
+}
+
+.text-decor {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.text-decor-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.nav-link.active {
+    font-weight: 600;
+}

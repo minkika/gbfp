@@ -26,5 +26,5 @@ urlpatterns = [
     path('vacancy/', include('vacancyapp.urls', namespace='vacancy')),
     path('rules/', TemplateView.as_view(template_name='mainapp/rules.html'), name='rules'),
     path('', include('mainapp.urls', namespace='main')),
-    path('resumeapp/', include('resumeapp.urls', namespace='resumeapp')),
+    path('resume/', include('resumeapp.urls', namespace='resume')),
     ]

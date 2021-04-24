@@ -4,7 +4,7 @@
 {% block content %}
 
 
-    <div class="card mx-auto" style="width:18rem;" id="loginForm">
+    <div class="card mx-auto shadow-sm" style="width: 400px;" id="loginForm">
         <!-- <img src="" class="card-img-top" alt="..."> -->
         <div class="card-body align-items-center align-content-center">
             <h5 class="card-title">Авторизация</h5>
@@ -30,7 +30,7 @@
                     </button>
                 </div>
             </form>
-            <span>Регистрация</span><br>
+            <p class="mt-4">Регистрация</p>
             <div class="d-grid gap-2">
                 <a class="btn btn-outline-secondary btn-sm " href="{% url 'auth:register_applicant' %}"
                    role="button">Соискателя</a>

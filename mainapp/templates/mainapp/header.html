@@ -1,64 +1,51 @@
 <div id="header">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark ">
-        <div class="container-fluid mx-5">
-            <div id="logo" class="text-center align-middle">
-                <span class="align-middle fw-bold text-light">GB</span>
-                <!-- <a class="navbar-brand text-center p-0 fs-3"  href="#">GB</a> -->
-            </div>
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <a href="{% url 'main:main' %}">
+                <div id="logo" class="text-center align-middle rounded-circle">
+                    <img src="/static/gb.png" alt="">
+                </div>
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarId"
                     aria-controls="navbarId" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse " id="navbarId">
+            <div class="collapse navbar-collapse ms-3" id="navbarId">
                 <div class="navbar-nav flex-row flex-wrap flex-grow">
-                    {#                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" #}
-                    {#                       href="{% url 'main' %}">Главная</a>#}
+
                     <a class="nav-link {% if request.path == '/news/' or request.path == '/' %}active{% endif %}"
-                       aria-current="page" href="{% url 'main:main_list' %}">Новости</a>
+                       aria-current="page" href="{% url 'main:main' %}">Новости</a>
                     <a class="nav-link {% if request.path == '/rules/' %}active{% endif %}" aria-current="page"
                        href="{% url 'rules' %}">Правила портала</a>
+                    <a class="nav-link {% if request.path == '/list/' %}active{% endif %}"
+                       aria-current="page" href="{% url 'main:vac_res_list' %}">
+                        {% if request.user.is_authenticated %}{% if request.user.is_staff %}
+                            Резюме{% else %}Вакансии{% endif %}{% endif %}</a>
                 </div>
             </div>
             {#            <a class="btn btn-outline-secondary btn-sm" href="/auth/account/login/" role="button">Войти</a>#}
             {% if request.user.is_authenticated %}
-                {#                <a class="btn btn-outline-secondary btn-sm" href="">{{ request.user }}</a>#}
-                <div class="dropstart">
-                    <div class="dropdown">
-                        <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button"
-                           id="dropdownMenuLink"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ request.user }}
-                        </a>
-
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {# Лк работодателя #}
-                            {% if user.is_staff %}
-                                <li><a class="dropdown-item" href="{% url 'company:view' %}">Личный кабинет</a></li>
-                            {% else %}
-                                {# Лк соискателя #}
-                                <li><a class="dropdown-item" href="{% url 'applicant:view' %}">Личный кабинет</a></li>
-                            {% endif %}
-                            <li><a class="dropdown-item" href="{% url 'auth:logout' %}">Выход</a></li>
-                            {#                        <li><a class="dropdown-item" href="#">Something else here</a></li>#}
-                        </ul>
-                    </div>
-
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        {# Лк работодателя #}
-                        {% if user.is_staff %}
-                            <li><a class="dropdown-item" href="{% url 'company:view' %}">Личный кабинет</a></li>
+                <div class="btn-group dropstart">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        {{ request.user }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Админка</a></li>
+                        {% elif user.is_staff %}
+                            <li><a class="dropdown-item" href="{% url 'company:company_view' %}">Личный кабинет</a></li>
                         {% else %}
                             {# Лк соискателя #}
-                            <li><a class="dropdown-item" href="{% url 'applicant:view' %}">Личный кабинет</a></li>
+                            <li><a class="dropdown-item" href="{% url 'applicant:applicant_view' %}">Личный кабинет</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" href="{% url 'auth:logout' %}">Выход</a></li>
-                        {#                        <li><a class="dropdown-item" href="#">Something else here</a></li>#}
                     </ul>
-
                 </div>
+
             {% else %}
-                <a class="btn btn-outline-light btn-sm" href="{% url 'auth:login' %}" role="button">Войти</a>
+                <a class="btn btn-outline-primary rounded-pill" href="{% url 'auth:login' %}"
+                   role="button">Войти</a>
 
             {% endif %}
         </div>

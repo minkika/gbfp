@@ -5,10 +5,11 @@
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">Мои избранные</h6>
-        {% for item in favourites_list %}
+        {% for item in favorites %}
             <div class="d-flex text-muted pt-3">
                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <div>{{ item }}</div>
+                    <div></div>
+                    <a href="{% url 'resume:resume_detail' item.resume.pk %}">{{ item.resume }}</a>
                 </div>
             </div>
         {% empty %}
@@ -19,13 +20,15 @@
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">Мои вакансии</h6>
         {% if vacancies_list %}
-            <table id="datatable" class="table dt-responsive nowrap table-vertical"
+            <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical"
                    width="100%" cellspacing="0">
                 <thead>
                 <tr>
                     <th>#</th>
                     <th>Название</th>
-                    <th>Описание</th>
+                    <th>Черновик</th>
+                    <th>Проверено<br>модератором</th>
+                    <th>Опубликовано</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
@@ -33,15 +36,24 @@
                 {% for vacancy in vacancies_list %}
                     <tr>
                         <td>{{ vacancy.id }}</td>
-                        <td>{{ vacancy.name }}</td>
-                        <td>{{ vacancy.description }}</td>
+                        <td>{{ vacancy.vacancy_name }}</td>
+                        <td> {% if vacancy.is_draft %} Да {% else %} Нет {% endif %}</td>
+                        <td> {% if vacancy.is_approved %} Да {% else %} Нет {% endif %}</td>
+                        <td> {% if vacancy.is_active %} Да {% else %} Нет {% endif %}</td>
                         <td>
-                            <a href="{% url 'vacancy:vacancy_detail' vacancy.pk %}"
-                               class="text-muted"><i class="fas fa-eye"></i></a>
+<!--                            <a href="{% url 'vacancy:vacancy_detail' vacancy.pk %}"-->
+<!--                               class="text-muted" title="Просмотр"><i class="fas fa-eye"></i></a>-->
                             <a href="{% url 'vacancy:vacancy_update' vacancy.pk %}"
-                               class="text-muted ms-2"><i class="fas fa-pencil-alt"></i></a>
-                            <a href="{% url 'vacancy:vacancy_delete' vacancy.pk %}"
-                               class="text-muted ms-2"><i class="fas fa-times"></i></a>
+                               class="text-muted ms-2" title="Редактирование"><i class="fas fa-pencil-alt"></i></a>
+                            {% if vacancy.is_approved %}
+                                {% if vacancy.is_active %}
+                                   <a href="{% url 'vacancy:vacancy_delete' vacancy.pk %}" class="text-muted ms-2" title="Снять активность">
+                                       <i class="fa fa-toggle-on" aria-hidden="true"></i></a>
+                               {% else %}
+                                   <a href="{% url 'vacancy:vacancy_delete' vacancy.pk %}" class="text-muted ms-2" title="Установить активность">
+                                       <i class="fa fa-toggle-off" aria-hidden="true"></i></a>
+                               {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -53,5 +65,32 @@
 
         <a class="btn btn-outline-secondary" href="{% url 'vacancy:vacancy_create' %}">Создать</a>
     </div>
+        <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">Мои предложения</h6>
+           {% if not responses_list %}
+            <p class="lead">Пока нет предложений</p>
+           {% else %}
+                <table class="table table-striped dt-responsive nowrap table-vertical" width="100%"
+                      cellspacing="0">
+               <thead>
+                   <tr>
+                       <th>Вакансия, на которую откликнулся соискатель</th>
+                       <th>Кто откликнулся</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   {% for item in responses_list %}
+                        {% if item.vacancy %}
+                            <tr>
+                               <td>{{ item.vacancy.vacancy_name }}</td>
+                               <td><a href="{% url 'applicant:applicant_detail' item.user.id %}" class="text-decoration-none">{{ item.user.last_name }} {{ item.user.first_name }} {{ item.user.user_patronymic }}</a></td>
+                           </tr>
+                        {% endif %}
+                   {% endfor %}
+               </tbody>
+               </table>
+        {% endif %}
+        </div>
+
 
 {% endblock %}

@@ -1,14 +1,15 @@
-{% extends 'applicantapp/base.html' %}
+{% extends 'companyapp/base.html' %}
 {% load static %}
 
 {% block content %}
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">Мои избранные</h6>
-        {% for item in favourites_list %}
+        {% for item in favorites %}
             <div class="d-flex text-muted pt-3">
                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <div>{{ item }}</div>
+                    <a href="{% url 'vacancy:vacancy_detail' item.vacancy.pk %}">{{ item.vacancy }}</a>
+
                 </div>
             </div>
         {% empty %}
@@ -20,14 +21,15 @@
            {% if not resume_list %}
             <p class="lead">Пока нет резюме</p>
            {% else %}
-               <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical" width="100%"
+               <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical size" width="100%"
                       cellspacing="0">
                <thead>
                    <tr>
                        <th>#</th>
                        <th>Название</th>
-                       <th>Комментарий</th>
                        <th>Черновик</th>
+                       <th>Проверено<br>модератором</th>
+                       <th>Опубликовано</th>
                        <th>Действия</th>
                    </tr>
                </thead>
@@ -35,13 +37,25 @@
                    {% for resume in resume_list %}
                        <tr>
                            <td>{{ resume.id }}</td>
-                           <td>{{ resume.name }}</td>
-                           <td>{{ resume.comment }}</td>
+                           <td>{{ resume.resume_name }}</td>
                            <td> {% if resume.is_draft %} Да {% else %} Нет {% endif %}</td>
+                           <td> {% if resume.is_approved %} Да {% else %} Нет {% endif %}</td>
+                           <td> {% if resume.is_active %} Да {% else %} Нет {% endif %}</td>
                            <td>
-                               <a href="{% url 'resume:resume_update' resume.pk %}">Редактировать</a>
-                               <a href="{% url 'resume:resume_delete' resume.pk %}"
-                                  class="text-muted">Удалить</a>
+<!--                               <a href="{% url 'resume:resume_detail' resume.pk %}" class="text-muted" title="Просмотр">-->
+<!--                                   <i class="fas fa-eye"></i></a>-->
+                               <a href="{% url 'resume:resume_update' resume.pk %}" class="text-muted ms-2" title="Редактирование">
+                                   <i class="fas fa-pencil-alt"></i></a>
+                               {% if resume.is_approved %}
+                                   {% if resume.is_active %}
+                                       <a href="{% url 'resume:resume_delete' resume.pk %}" class="text-muted ms-2" title="Снять активность">
+                                           <i class="fa fa-toggle-on" aria-hidden="true"></i></a>
+                                   {% else %}
+                                       <a href="{% url 'resume:resume_delete' resume.pk %}" class="text-muted ms-2" title="Установить активность">
+                                           <i class="fa fa-toggle-off" aria-hidden="true"></i></a>
+                                   {% endif %}
+                               {% endif %}
+
                            </td>
                        </tr>
                    {% endfor %}
@@ -49,20 +63,32 @@
                </table>
 
         {% endif %}
-        <a class="btn btn-outline-secondary" href="{% url 'resume:resume_create' %}">Создать резюме</a>
+        <a class="btn btn-outline-secondary" href="{% url 'resume:resume_create' %}">Создать</a>
         </div>
         <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">Мои предложения</h6>
-           {% if not pa_responces %}
+           {% if not responses_list %}
             <p class="lead">Пока нет предложений</p>
            {% else %}
-                {% for item in pa_proposal %}
-                    <div class="d-flex text-muted pt-3">
-                        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                            <div>{{ item }}</div>
-                        </div>
-                    </div>
-                {% endfor %}
+                <table class="table table-striped dt-responsive nowrap table-vertical" width="100%"
+                      cellspacing="0">
+               <thead>
+                   <tr>
+                       <th>Резюме, по которому Вас пригласили на обеседование</th>
+                       <th>Кто пригласил</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   {% for item in responses_list %}
+                       {% if item.resume %}
+                           <tr>
+                               <td>{{ item.resume.resume_name }}</td>
+                               <td><a href="{% url 'company:company_detail' item.user.id %}" class="text-decoration-none">{{ item.user.company_name }}</a></td>
+                           </tr>
+                       {% endif %}
+                   {% endfor %}
+               </tbody>
+               </table>
         {% endif %}
         </div>
 {% endblock %}

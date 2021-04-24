@@ -1,6 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+from mainapp.models import Responses, Favorites
 from resumeapp.forms import ResumeEditForm
 from resumeapp.models import Resume
 from django.http import HttpResponseRedirect
@@ -15,16 +17,10 @@ class ResumeListView(ListView):
     ordering = '-is_active'
     template_name = 'resumeapp/resume_list.html'
 
-    # def test_func(self):
-    #     return self.request.user.is_staff
-    #
-    # def handle_no_permission(self):
-    #     return HttpResponseRedirect(reverse('main'))
-
 
 class ResumeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Resume
-    success_url = reverse_lazy('applicant:view')
+    success_url = reverse_lazy('applicant:applicant_view')
     form_class = ResumeEditForm
     title = 'Создать резюме'
     template_name = 'resumeapp/resume_form.html'
@@ -38,12 +34,13 @@ class ResumeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return not self.request.user.is_staff
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(reverse('main:main_list'))
+        return HttpResponseRedirect(reverse('main:main'))
 
 
 class ResumeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Resume
-    success_url = reverse_lazy('applicant:view')
+    exclude = ('is_approved',)
+    success_url = reverse_lazy('applicant:applicant_view')
     form_class = ResumeEditForm
     title = 'Редактировать резюме'
     template_name = 'resumeapp/resume_form.html'
@@ -59,14 +56,21 @@ class ResumeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return result
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(reverse('main:main_list'))
+        return HttpResponseRedirect(reverse('main:main'))
 
 
 class ResumeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Resume
-    success_url = reverse_lazy('applicant:view')
-    title = 'Удалить резюме'
-    template_name = 'resumeapp/resume_confirm_delete.html'
+    success_url = reverse_lazy('applicant:applicant_view')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
+        return HttpResponseRedirect(self.success_url)
 
     def test_func(self):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -74,10 +78,23 @@ class ResumeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return result
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(reverse('main:main_list'))
+        return HttpResponseRedirect(reverse('main:main'))
 
 
 class ResumeDetailView(DetailView):
     model = Resume
     title = 'Вакансия'
+    exclude = ('is_approved',)
     template_name = 'resumeapp/resume_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['in_responses'] = False
+        context['in_favorites'] = False
+        response = Responses.objects.filter(resume_id=self.kwargs['pk'], user_id=self.request.user.pk, is_active=True)
+        favorites = Favorites.objects.filter(resume_id=self.kwargs['pk'], user_id=self.request.user.pk, is_active=True)
+        if response:
+            context['in_responses'] = True
+        if favorites:
+            context['in_favorites'] = True
+        return context

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
-
-class AuthappConfig(AppConfig):
-    name = 'authapp'
+class AuthAppConfig(AppConfig):
+    name = "authapp"
+    verbose_name = "Пользователи"

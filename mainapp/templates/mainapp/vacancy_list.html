@@ -1,0 +1,61 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <h3 class="m-2">{{ title }}</h3>
+        <div class="row">
+            <div class="col-xl-3">
+                <div class="card w-auto m-2 shadow-sm" style="">
+                    <div class="card-body">
+                        <form id="form-horizontal m-t-30" method="get" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div class="form-button">
+                                <button id="submit" type="submit"
+                                        class="btn btn-primary w-md waves-effect waves-light">Поиск
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl">
+                {% for obj in data %}
+                    <div class="card w-auto m-2 shadow-sm" style="">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ obj.name }}</h5>
+                            <p class="card-text">{% if title == 'Список вакансий' %}{{ obj.description }}{% else %}
+                                {{ obj.resume_name }}{% endif %}</p>
+                            <h6 class="card-subtitle mb-2 text-muted ">{{ obj.salary }}</h6>
+                            <a href="
+                    {% if title == 'Список вакансий' %}
+                     {% url 'vacancy:vacancy_detail' obj.pk %}
+                    {% else %}
+                     {% url 'resume:resume_detail' obj.pk %}
+                    {% endif %}"
+                               class="btn btn-primary mt-3">Подробнее</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h6>Извините, нет вакансий для отображения</h6>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="paginator col-xxl-9">
+                {% if data.has_previous %}
+                    <a href="?page={{ data.previous_page_number }}"><i class="fa fa-angle-double-left"
+                                                                       aria-hidden="true"></i></a>
+                {% endif %}
+                <span class="current">
+            Страница {{ data.number }} из {{ data.paginator.num_pages }}
+            </span>
+                {% if data.has_next %}
+                    <a href="?page={{ data.next_page_number }}"><i class="fa fa-angle-double-right"
+                                                                   aria-hidden="true"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

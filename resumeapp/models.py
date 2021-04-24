@@ -3,34 +3,24 @@ from authapp.models import User
 
 
 class Resume(models.Model):
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        # name должно быть видно только соискателю
-        name = models.CharField(verbose_name='название', max_length=250, blank=True, null=True)
-        cellphone = models.PositiveBigIntegerField(verbose_name='номер телефона')
-        comment = models.CharField(verbose_name='описание', max_length=250, blank=True, null=True)
-        hide_comment = models.BooleanField(verbose_name='Комментарий к резюме виден только Вам', default=True)
-        is_draft = models.BooleanField(verbose_name='черновик', default=False)
-        created = models.DateTimeField(verbose_name='создан', auto_now_add=True)
-        updated = models.DateTimeField(verbose_name='обновлен', auto_now=True)
-        is_active = models.BooleanField(verbose_name='активен', default=False)
-        job_list = models.TextField(verbose_name='опыт работы', blank=True, default='')
-        salary = models.FloatField(verbose_name='Ожидаемая заработная плата', blank=True, default=0)
-        key_words = models.TextField(verbose_name='ключевы навыки', blank=True, default='')
-        education = models.TextField(verbose_name='образование', blank=True, default='')
-        languages = models.TextField(verbose_name='знание языков', blank=True, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    resume_name = models.CharField(verbose_name='Желаемая должность', max_length=250, blank=True, null=True)
+    cellphone = models.PositiveBigIntegerField(verbose_name='Номер телефона')
+    salary = models.FloatField(verbose_name='Ожидаемая заработная плата', blank=True, default=0)
+    education = models.TextField(verbose_name='Образование', blank=True, default='')
+    job_list = models.TextField(verbose_name='Опыт работы', blank=True, default='')
+    key_words = models.TextField(verbose_name='Ключевы навыки', blank=True, default='')
+    languages = models.TextField(verbose_name='Знание языков', blank=True, default='')
+    is_draft = models.BooleanField(verbose_name='Черновик', default=False)
+    created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name='Обновлено', auto_now=True)
+    is_active = models.BooleanField(verbose_name='Опубликовано', default=False)
+    is_approved = models.BooleanField(verbose_name='Проверено', default=False)
 
-        def _calc_experience(self):
-            '''
-            Calculates years and months of experience
-            '''
-            pass
+    class Meta:
+        ordering = ('resume_name',)
+        verbose_name = 'Резюме'
+        verbose_name_plural = 'Резюме'
 
-        total_exp = property(_calc_experience)
-        
-        class Meta:
-            ordering = ('name',)
-            verbose_name = 'резюме'
-            verbose_name_plural = 'резюме'
-
-        def __str__(self):
-            return f'{self.name} ({self.comment})'
+    def __str__(self):
+        return f'{self.resume_name} ({self.salary})'

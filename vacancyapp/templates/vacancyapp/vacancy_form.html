@@ -3,14 +3,14 @@
 {% block content %}
     <div class="row">
         <div class="col-12">
-            <div class="card col-6">
+            <div class="card col-6 shadow-sm">
                 <div class="card-body">
                     <form id="form-horizontal m-t-30" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <div class="form-button">
                             <button id="submit" type="submit"
-                                    class="btn btn-primary w-md waves-effect waves-light">Сохранить
+                                    class="btn btn-primary w-md waves-effect waves-light">Отправить на проверку
                             </button>
                         </div>
                     </form>

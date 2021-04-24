@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IHRlc3Q3?=
+From: gb@work.local
+To: test7@gmail.com
+Date: Tue, 13 Apr 2021 13:26:03 -0000
+Message-ID: <161832036395.64239.5102872436232370057@1.0.0.127.in-addr.arpa>
+
+Для подтверждения учетной записи test7 перейдите по ссылке: 
+http://localhost:8000/auth/verify/test7@gmail.com/77a4e26d5aaf73cf912b1772cc94b09ec92b91e2/
+-------------------------------------------------------------------------------

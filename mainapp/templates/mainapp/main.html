@@ -2,62 +2,45 @@
 {% load static %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-    <h3>{{ title }}</h3>
-          <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical" width="100%"
-                      cellspacing="0">
-               <thead>
-                   <tr>
-                       <th>#</th>
-                       <th>Название</th>
 
-                   </tr>
-               </thead>
-               <tbody>
-                   {% for obj in data %}
-                       <tr>
-                           <td>{{ obj.id }}</td>
-                           <td>{% if title == 'Список вакансий' %}
-                               <a href="{% url 'vacancy:vacancy_detail' obj.pk %}"> {{ obj.name }} </a>
+    <h3 class="text-center mt-3 mb-3">Новости</h3>
+    {% for post in blog_posts %}
+        <div class="card mb-2 shadow-sm" style="">
+            <div class="card-body">
+                <h5 class="card-title mb-1">{{ post.title }}</h5>
+                <p class="card-subtitle mb-3 text-muted ">{{ post.date }}</p>
+                <p class="card-text">{{ post.text }}</p>
+            </div>
+        </div>
+    {% endfor %}
 
-                               {% else %}
-                               <a href="{% url 'resume:resume_detail' obj.pk %}"> {{ obj.name }} </a>
-
-                               {% endif %}
-                           </td>
-                       </tr>
-                   {% endfor %}
-               </tbody>
-               </table>
-    {% endif %}
-
-<br>
-<br>
-<br>
-
-
-    <div class="card m-2 shadow-sm" style="">
-        <!-- <img src="" class="card-img-top" alt="..."> -->
-        <div class="card-body">
-            <h5 class="card-title">С 8 марта, дамы!</h5>
-            <h6 class="card-subtitle mb-2 text-muted ">08.03.2021</h6>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus alias architecto
-                atque cum dignissimos dolor, dolorum eaque facilis harum ipsum laboriosam modi odio qui repellat
-                suscipit ullam, unde voluptates voluptatibus!</p>
-            b5
+    <div class="row justify-content-end">
+        <div class="paginator ">
+            {% if blog_posts.has_previous %}
+                <a href="?page={{ blog_posts.previous_page_number }}"><i class="fa fa-angle-double-left"
+                                                                         aria-hidden="true"></i></a>
+            {% endif %}
+            <span class="current">
+            Страница {{ blog_posts.number }} из {{ paginator.num_pages }}
+            </span>
+            {% if blog_posts.has_next %}
+                <a href="?page={{ blog_posts.next_page_number }}"><i class="fa fa-angle-double-right"
+                                                                     aria-hidden="false"></i></a>
+            {% endif %}
         </div>
     </div>
-    <div class="card m-2 shadow-sm" style="">
-        <!-- <img src="" class="card-img-top" alt="..."> -->
-        <div class="card-body">
-            <h5 class="card-title">Мы открылись!</h5>
-            <h6 class="card-subtitle mb-2 text-muted ">08.03.2021</h6>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam culpa cum delectus
-                dolor earum eius id illo in ipsam, magnam modi quas quis similique suscipit unde velit veritatis
-                vitae!</p>
-            b5
-        </div>
+    <h3 class="text-center mb-3 mt-3">Партнеры</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-6">
+        {% for company in company_list %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <a href="{% url 'company:company_detail' company.id %}"
+                           class="card-title text-decoration-none fs-6 text-decor-2">{{ company.company_name }}</a>
+                        <p class="card-text text-decor mt-2">{{ company.company_about }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-
-
 {% endblock %}
